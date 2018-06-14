@@ -1,0 +1,126 @@
+package cn.edu.whu.lmars.Conf;
+
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
+import java.util.Set;
+import java.util.TreeMap;
+
+import cn.edu.whu.lmars.SpatialDB.Util.PropertiesUtil;
+import cn.edu.whu.lmars.SpatialDB.entity.Range;
+
+public class Configuration {
+	/**
+	 * 范围
+	 */
+	//空间分辨率
+	private TreeMap<Integer,Range> spatialResolutionMap;
+	//时间分辨率
+	private TreeMap<Integer,Range> timeResolutionMap;
+	//光谱分辨率
+	private TreeMap<Integer,Range> spectrumResolutionMap;
+	//辐射分辨率
+	private TreeMap<Integer,Range> radiationResolutionMap;
+	//幅宽
+	private TreeMap<Integer,Range> widthMap;
+	//信噪比
+	private TreeMap<Integer,Range> snrMap;
+	//交会角
+	private TreeMap<Integer,Range> angleMap;
+	//波段
+	private TreeMap<Integer,Range> waveBandMap;
+	
+	
+	/**
+	 * 枚举
+	 */
+	//比例尺
+	private TreeMap<Integer,String> scaleMap;
+	//传感器类型
+	private TreeMap<Integer,String> typeMap;
+	//成像模式
+	private TreeMap<Integer,String> modeMap;
+	//极化要求
+	private TreeMap<Integer,String> poleDemandMap;
+	//极化方式
+	private TreeMap<Integer,String> poleMethodMap;
+	
+	public boolean isDefault;
+	
+	public void loadConf(boolean isDeafult){
+		if(isDeafult==true){
+			//范围
+			Properties angle = PropertiesUtil.getProperInfo("angle");
+			Properties radiationResolution = PropertiesUtil.getProperInfo("radiationResolution");
+			Properties snr = PropertiesUtil.getProperInfo("snr");
+			Properties spatialResolution = PropertiesUtil.getProperInfo("spatialResolution");
+			Properties spectrumResolution = PropertiesUtil.getProperInfo("spectrumResolution");
+			Properties timeResolution = PropertiesUtil.getProperInfo("timeResolution");
+			Properties waveBand = PropertiesUtil.getProperInfo("waveBand");
+			Properties width = PropertiesUtil.getProperInfo("width");
+			
+			spatialResolutionMap = readRangeConf(spatialResolution);
+			timeResolutionMap = readRangeConf(timeResolution);
+			spectrumResolutionMap = readRangeConf(spectrumResolution);
+			radiationResolutionMap = readRangeConf(radiationResolution);
+			widthMap = readRangeConf(width);
+			snrMap = readRangeConf(snr);
+			angleMap = readRangeConf(angle);
+			waveBandMap = readRangeConf(waveBand);
+			
+			//枚举
+			Properties scale = PropertiesUtil.getProperInfo("scale");
+			Properties type = PropertiesUtil.getProperInfo("type");
+			Properties mode = PropertiesUtil.getProperInfo("mode");
+			Properties poleDemand = PropertiesUtil.getProperInfo("poleDemand");
+			Properties poleMethod = PropertiesUtil.getProperInfo("poleMethod");
+			
+			scaleMap = readValueConf(scale);
+			typeMap = readValueConf(type);
+			modeMap = readValueConf(mode);
+			poleDemandMap = readValueConf(poleDemand);
+			poleMethodMap = readValueConf(poleMethod);
+		}
+		
+	}
+	
+	public TreeMap<Integer,Range> readRangeConf(Properties pro) {
+		TreeMap<Integer,Range> treeMap = new TreeMap<>();
+		Set<Entry<Object, Object>> set = pro.entrySet();
+		for(Entry<Object, Object> entry:set){
+			String value = (String)entry.getValue();
+			String[] arr = value.split("-");
+			Range r = new Range(Double.parseDouble(arr[0]), Double.parseDouble(arr[1]));
+			treeMap.put(Integer.parseInt(entry.getKey().toString()), r);
+		}
+		return treeMap;
+	}
+	
+	public TreeMap<Integer,String> readValueConf(Properties pro) {
+		TreeMap<Integer,String> treeMap = new TreeMap<>();
+		Set<Entry<Object, Object>> set = pro.entrySet();
+		for(Entry<Object, Object> entry:set){
+			treeMap.put(Integer.parseInt(entry.getKey().toString()), (String)entry.getValue());
+		}
+		return treeMap;
+	}
+	
+	public static void main(String[] args) {
+		Configuration conf = new Configuration();
+		conf.loadConf(true);
+		System.out.println(conf.spatialResolutionMap);
+		System.out.println(conf.timeResolutionMap);
+		System.out.println(conf.spectrumResolutionMap);
+		System.out.println(conf.radiationResolutionMap);
+		System.out.println(conf.widthMap);
+		System.out.println(conf.snrMap);
+		System.out.println(conf.angleMap);
+		System.out.println(conf.waveBandMap);
+		System.out.println(conf.scaleMap);
+		System.out.println(conf.typeMap);
+		System.out.println(conf.modeMap);
+		System.out.println(conf.poleDemandMap);
+		System.out.println(conf.poleMethodMap);
+	}
+	
+}

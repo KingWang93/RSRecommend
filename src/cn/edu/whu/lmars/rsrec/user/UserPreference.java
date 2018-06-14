@@ -1,0 +1,464 @@
+package cn.edu.whu.lmars.rsrec.user;
+
+import java.text.DecimalFormat;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+
+import cn.edu.whu.lmars.rsrec.calc.RangeStat;
+import cn.edu.whu.lmars.rsrec.conf.Configuration;
+import cn.edu.whu.lmars.rsrec.entity.Index;
+import cn.edu.whu.lmars.rsrec.entity.Range;
+import cn.edu.whu.lmars.rsrec.entity.Score;
+import cn.edu.whu.lmars.rsrec.entity.TrainData;
+import cn.edu.whu.lmars.rsrec.geo.GeoProcessor;
+
+public class UserPreference {
+	private String userId;
+	private int metanum;
+	private TreeMap<Integer, Integer> spatialResolutionPref;// 空间分辨率
+	private TreeMap<Integer, Integer> timeResolutionPref;// 时间分辨率
+	private TreeMap<Integer, Integer> spectrumResolutionPref;// 光谱分辨率
+	private TreeMap<Integer, Integer> radiationResolutionPref;// 辐射分辨率
+	private TreeMap<Integer, Integer> widthPref;// 幅宽
+	private TreeMap<Integer, Integer> snrPref;// 信噪比
+	private TreeMap<Integer, Integer> anglePref;// 交会角
+	private TreeMap<Integer, Integer> waveBandPref;// 波段
+	private TreeMap<Integer, Integer> scalePref;// 比例尺
+	private TreeMap<Integer, Integer> typePref;// 传感器类型
+	private TreeMap<Integer, Integer> modePref;// 成像模式
+	private TreeMap<Integer, Integer> poleDemandPref;// 极化要求
+	private TreeMap<Integer, Integer> poleMethodPref;// 极化方法
+	private TreeMap<String, Integer> spatialPref;// 空间
+	private TreeMap<String, Integer> timePref;// 时间
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserid(String userId) {
+		this.userId = userId;
+	}
+
+	public int getMetanum() {
+		return metanum;
+	}
+
+	public void setMetanum(int metanum) {
+		this.metanum = metanum;
+	}
+
+	public TreeMap<Integer, Integer> getSpatialResolutionPref() {
+		return spatialResolutionPref;
+	}
+
+	public void setSpatialResolutionPref(TreeMap<Integer, Integer> spatialResolutionPref) {
+		this.spatialResolutionPref = spatialResolutionPref;
+	}
+
+	public TreeMap<Integer, Integer> getTimeResolutionPref() {
+		return timeResolutionPref;
+	}
+
+	public void setTimeResolutionPref(TreeMap<Integer, Integer> timeResolutionPref) {
+		this.timeResolutionPref = timeResolutionPref;
+	}
+
+	public TreeMap<Integer, Integer> getSpectrumResolutionPref() {
+		return spectrumResolutionPref;
+	}
+
+	public void setSpectrumResolutionPref(TreeMap<Integer, Integer> spectrumResolutionPref) {
+		this.spectrumResolutionPref = spectrumResolutionPref;
+	}
+
+	public TreeMap<Integer, Integer> getRadiationResolutionPref() {
+		return radiationResolutionPref;
+	}
+
+	public void setRadiationResolutionPref(TreeMap<Integer, Integer> radiationResolutionPref) {
+		this.radiationResolutionPref = radiationResolutionPref;
+	}
+
+	public TreeMap<Integer, Integer> getWidthPref() {
+		return widthPref;
+	}
+
+	public void setWidthPref(TreeMap<Integer, Integer> widthPref) {
+		this.widthPref = widthPref;
+	}
+
+	public TreeMap<Integer, Integer> getSnrPref() {
+		return snrPref;
+	}
+
+	public void setSnrPref(TreeMap<Integer, Integer> snrPref) {
+		this.snrPref = snrPref;
+	}
+
+	public TreeMap<Integer, Integer> getAnglePref() {
+		return anglePref;
+	}
+
+	public void setAnglePref(TreeMap<Integer, Integer> anglePref) {
+		this.anglePref = anglePref;
+	}
+
+	public TreeMap<Integer, Integer> getWaveBandPref() {
+		return waveBandPref;
+	}
+
+	public void setWaveBandPref(TreeMap<Integer, Integer> waveBandPref) {
+		this.waveBandPref = waveBandPref;
+	}
+
+	public TreeMap<Integer, Integer> getScalePref() {
+		return scalePref;
+	}
+
+	public void setScalePref(TreeMap<Integer, Integer> scalePref) {
+		this.scalePref = scalePref;
+	}
+
+	public TreeMap<Integer, Integer> getTypePref() {
+		return typePref;
+	}
+
+	public void setTypePref(TreeMap<Integer, Integer> typePref) {
+		this.typePref = typePref;
+	}
+
+	public TreeMap<Integer, Integer> getModePref() {
+		return modePref;
+	}
+
+	public void setModePref(TreeMap<Integer, Integer> modePref) {
+		this.modePref = modePref;
+	}
+
+	public TreeMap<Integer, Integer> getPoleDemandPref() {
+		return poleDemandPref;
+	}
+
+	public void setPoleDemandPref(TreeMap<Integer, Integer> poleDemandPref) {
+		this.poleDemandPref = poleDemandPref;
+	}
+
+	public TreeMap<Integer, Integer> getPoleMethodPref() {
+		return poleMethodPref;
+	}
+
+	public void setPoleMethodPref(TreeMap<Integer, Integer> poleMethodPref) {
+		this.poleMethodPref = poleMethodPref;
+	}
+
+	public TreeMap<String, Integer> getSpatialPref() {
+		return spatialPref;
+	}
+
+	public void setSpatialPref(TreeMap<String, Integer> spatialPref) {
+		this.spatialPref = spatialPref;
+	}
+
+	public TreeMap<String, Integer> getTimePref() {
+		return timePref;
+	}
+
+	public void setTimePref(TreeMap<String, Integer> timePref) {
+		this.timePref = timePref;
+	}
+
+	public UserPreference addTrainData(TrainData data) {
+		if (Configuration.loaded == false) {
+			Configuration.loadConf(true);
+		}
+		apply(data.getSpatialResolution(), Configuration.getSpatialResolutionMap(), spatialResolutionPref);
+		apply(data.getTimeResolution(), Configuration.getTimeResolutionMap(), timeResolutionPref);
+		apply(data.getSpectrumResolution(), Configuration.getSpectrumResolutionMap(), spectrumResolutionPref);
+		apply(data.getRadiationResolution(), Configuration.getRadiationResolutionMap(), radiationResolutionPref);
+		apply(data.getWidth(), Configuration.getWidthMap(), widthPref);
+		apply(data.getSnr(), Configuration.getSnrMap(), snrPref);
+		apply(data.getAngle(), Configuration.getAngleMap(), anglePref);
+		apply(data.getWaveBand(), Configuration.getWaveBandMap(), waveBandPref);
+		apply(data.getScale(), Configuration.getScaleMap(), scalePref);
+		apply(data.getType(), Configuration.getTypeMap(), typePref);
+		apply(data.getMode(), Configuration.getModeMap(), modePref);
+		apply(data.getPoleDemand(), Configuration.getPoleDemandMap(), poleDemandPref);
+		applyPoleMethod(data.getPoleMethod(), Configuration.getPoleMethodMap(), poleMethodPref);
+		apply(data.getSpatial(), spatialPref);
+		apply(data.getTime(), timePref);
+		metanum++;
+		return this;
+	}
+
+	/**
+	 * 输入的数据是一个range的list，适用于波段
+	 * 
+	 * @param list
+	 * @param conf
+	 * @param res
+	 */
+	public void apply(List<Range> list, TreeMap<Integer, Range> conf, TreeMap<Integer, Integer> res) {
+		RangeStat stat = new RangeStat(conf);
+		TreeMap<Integer, Integer> map = stat.getRangeMap(list);
+		for (Entry<Integer, Integer> entry : map.entrySet()) {
+			if (res.containsKey(entry.getKey())) {
+				res.put(entry.getKey(), entry.getValue() + 1);
+			} else {
+				res.put(entry.getKey(), 1);
+			}
+		}
+	}
+
+	/**
+	 * 输入的数据是单个值
+	 * 
+	 * @param val
+	 * @param conf
+	 * @param res
+	 */
+	public void apply(double val, TreeMap<Integer, Range> conf, TreeMap<Integer, Integer> res) {
+		RangeStat stat = new RangeStat(conf);
+		int spaReso_index = stat.getSingleIndex(val);
+		if (res.containsKey(spaReso_index)) {
+			res.put(spaReso_index, res.get(spaReso_index) + 1);
+		} else {
+			res.put(spaReso_index, 1);
+		}
+	}
+
+	/**
+	 * 输入的是一串坐标串（首尾相连）
+	 * 
+	 * @param imageRec
+	 * @param res
+	 */
+	public void apply(String imageRec, TreeMap<String, Integer> res) {
+		GeoProcessor processor = new GeoProcessor(imageRec);
+		Map<String, Integer> coverMap = processor.calcGridCover();
+		for (Entry<String, Integer> entry : coverMap.entrySet()) {
+			if (res.containsKey(entry.getKey())) {
+				res.put(entry.getKey(), res.get(entry.getKey()) + 1);
+			} else {
+				res.put(entry.getKey(), 1);
+			}
+		}
+	}
+
+	/**
+	 * 输入的是一个枚举的字符串
+	 * 
+	 * @param val
+	 * @param conf
+	 * @param res
+	 */
+	public void apply(String val, TreeMap<Integer, String> conf, TreeMap<Integer, Integer> res) {
+		for (Entry<Integer, String> entry : conf.entrySet()) {
+			if (entry.getValue().equals(val)) {
+				int index = entry.getKey();
+				if (res.containsKey(index)) {
+					res.put(index, res.get(index) + 1);
+				} else {
+					res.put(index, 1);
+				}
+				break;
+			}
+		}
+	}
+
+	/**
+	 * 输入的是一组字符串
+	 * 
+	 * @param val
+	 * @param conf
+	 * @param res
+	 */
+	public void applyPoleMethod(List<String> list, TreeMap<Integer, String> conf, TreeMap<Integer, Integer> res) {
+		for (String val : list) {
+			for (Entry<Integer, String> entry : conf.entrySet()) {
+				if (entry.getValue().equals(val)) {
+					int index = entry.getKey();
+					if (res.containsKey(index)) {
+						res.put(index, res.get(index) + 1);
+					} else {
+						res.put(index, 1);
+					}
+					break;
+				}
+			}
+		}
+	}
+
+	public UserPreference calcUserPref(List<TrainData> list) {
+		for (TrainData data : list) {
+			addTrainData(data);
+		}
+		return this;
+	}
+
+	public double relationShip(UserPreference pref, TrainData data) {
+		UserPreference pref1 = new UserPreference();
+		pref1.addTrainData(data);
+		return relate2Another(pref1);
+	}
+
+	/**
+	 * 计算两个TreeMap的得分
+	 * @param base
+	 * @param matched
+	 * @return
+	 */
+	public static double relate2IntegerMap(TreeMap<Integer, Integer> base, TreeMap<Integer, Integer> matched) {
+		int sum = base.values().stream().reduce(0, (a, b) -> {
+			return a + b;
+		});
+		double score = 0.0;
+		for (Entry<Integer, Integer> e : matched.entrySet()) {
+			int closest = Integer.MAX_VALUE;
+			Integer closest_index = null;
+			for (Entry<Integer, Integer> entry : base.entrySet()) {
+				int diff = Math.abs(e.getValue() - entry.getKey());
+				if (diff < closest) {
+					closest = diff;
+					closest_index = entry.getKey();
+				}
+			}
+			score += (1.0 / (closest + 1) * base.get(closest_index) / (double) sum);// 按照倒数乘以频率
+		}
+		return score;
+	}
+
+	/**
+	 * 计算两个TreeMap的得分（空间网格）
+	 * @param base
+	 * @param matched
+	 * @return
+	 */
+	public static double relate2StringMap(TreeMap<String, Integer> base, TreeMap<String, Integer> matched) {
+		int sum = base.values().stream().reduce(0, (a, b) -> {
+			return a + b;
+		});
+		double score = 0.0;
+		for (Entry<String, Integer> e : matched.entrySet()) {
+			int[] arr1 = extractGridIndex(e.getKey());
+			double closest = Integer.MAX_VALUE*1.0;
+			String closest_index = null;
+			for (Entry<String, Integer> entry : base.entrySet()) {
+				int[] arr2 = extractGridIndex(e.getKey());
+				int diff_x = arr1[0]-arr2[0];
+				int diff_y = arr1[1]-arr2[1];
+				double dist = Math.sqrt(Math.pow(diff_x, 2)+Math.pow(diff_y, 2));
+				if(dist<closest){
+					closest = dist;
+					closest_index = entry.getKey();
+				}
+			}
+			score += (1.0 / (closest + 1) * base.get(closest_index) / (double) sum);// 按照倒数乘以频率
+		}
+		return score;
+	}
+
+	public static int[] extractGridIndex(String cellName){
+		int[] arr=new int[2];
+		arr[0] = Integer.valueOf(cellName.substring(12, 15));
+		arr[1] = Integer.valueOf(cellName.substring(20,23));
+		return arr;
+	}
+	
+	/**
+	 * 计算时间
+	 * @param base
+	 * @param matched
+	 * @return
+	 */
+	public static double relate2TimeMap(TreeMap<String, Integer> base,
+			TreeMap<String, Integer> matched) {
+		int sum = base.values().stream().reduce(0, (a,b)->{
+			return a+b;
+		});
+		double score = 0.0;
+		for (Entry<String, Integer> e : matched.entrySet()) {
+			double closest = Integer.MAX_VALUE*1.0;
+			String closest_index = null;
+			for (Entry<String, Integer> entry : base.entrySet()) {
+				int year1 = Integer.valueOf(e.getKey().substring(0, 4));
+				int month1 = Integer.valueOf(e.getKey().substring(4, e.getKey().length()));
+				int year2 = Integer.valueOf(entry.getKey().substring(0,4));
+				int month2 = Integer.valueOf(entry.getKey().substring(4,entry.getKey().length()));
+				int dist = calcTimeDuration(year1,month1,year2,month2);
+				if(dist<closest){
+					closest = dist;
+					closest_index = entry.getKey();
+				}
+			}
+			score += (1.0 / (closest + 1) * base.get(closest_index) / (double) sum);// 按照倒数乘以频率
+		}
+		return score;
+	}
+	
+	public static int calcTimeDuration(int year1,int month1,int year2,int month2){
+		return Math.abs(year1*52+month1-(year2*52+month2));
+	}
+
+	public double relate2Another(UserPreference pref) {
+		double spatialResScore = relate2IntegerMap(this.getSpatialResolutionPref(), pref.getSpatialResolutionPref());
+		double timeResScore = relate2IntegerMap(this.getTimeResolutionPref(), pref.getTimeResolutionPref());
+		double spectrumResolutionScore = relate2IntegerMap(this.getSpectrumResolutionPref(),
+				pref.getSpectrumResolutionPref());
+		double radiationResolutionScore = relate2IntegerMap(this.getRadiationResolutionPref(),
+				pref.getRadiationResolutionPref());
+		double widthScore = relate2IntegerMap(this.getWidthPref(), pref.getWidthPref());
+		double snrScore = relate2IntegerMap(this.getSnrPref(), pref.getSnrPref());
+		double angleScore = relate2IntegerMap(this.getAnglePref(), pref.getAnglePref());
+		double waveBandScore = relate2IntegerMap(this.getWaveBandPref(), pref.getWaveBandPref());
+		double scaleScore = relate2IntegerMap(this.getScalePref(), pref.getScalePref());
+		double typeScore = relate2IntegerMap(this.getTypePref(), pref.getTypePref());
+		double modeScore = relate2IntegerMap(this.getModePref(), pref.getModePref());
+		double poleDemandScore = relate2IntegerMap(this.getPoleDemandPref(), pref.getPoleDemandPref());
+		double poleMethodScore = relate2IntegerMap(this.getPoleMethodPref(), pref.getPoleMethodPref());
+		double spatialScore = relate2StringMap(this.getSpatialPref(), pref.getSpatialPref());
+		double timeScore = relate2TimeMap(this.getTimePref(), pref.getTimePref());
+
+		Score score = new Score();
+		score.setAngleIndex(new Index(10, angleScore));
+		score.setModeIndex(new Index(10, modeScore));
+		score.setPoleDemandIndex(new Index(10, poleDemandScore));
+		score.setPoleMethodIndex(new Index(10, poleMethodScore));
+		score.setRadiationResolutionIndex(new Index(10, radiationResolutionScore));
+		score.setScaleIndex(new Index(10, scaleScore));
+		score.setSnrIndex(new Index(10, snrScore));
+		score.setSpatialIndex(new Index(10, spatialScore));
+		score.setSpatialResolutionIndex(new Index(10, spatialResScore));
+		score.setSpectrumResolutionIndex(new Index(10, spectrumResolutionScore));
+		score.setTimeIndex(new Index(10, timeScore));
+		score.setTimeResolutionIndex(new Index(10, timeResScore));
+		score.setTypeIndex(new Index(10, typeScore));
+		score.setWaveBandIndex(new Index(10, waveBandScore));
+		score.setWidthIndex(new Index(10, widthScore));
+		return score.evaluate();
+	}
+
+	public static void main(String[] args) {
+		TreeMap<String, Integer> base = new TreeMap<>();
+		base.put("201607", 2);
+		TreeMap<String, Integer> matched = new TreeMap<>();
+		matched.put("201706", 1);
+		System.out.println(new UserPreference().relate2TimeMap(base, matched));
+
+		// 测试保留位数
+		DecimalFormat df = new DecimalFormat("0.00");
+		String rate = df.format(0.176121);
+		System.out.println(rate);
+		//测试cellName
+		System.out.println(extractGridIndex("CELL_C_0000000500000040")[0]);
+		System.out.println(extractGridIndex("CELL_C_0000000500000040")[1]);
+		//计算两个UserPreference的相似度(调用示例，不能运行)
+//		UserPreference user1 = new UserPreference();
+//		user1.relate2Another(new UserPreference());
+		//计算一条TrainData和一个UserPreference的相似度(调用示例，不能运行)
+//		UserPreference user1 = new UserPreference();
+//		user1.addTrainData(new TrainData());
+//		user1.relate2Another(new UserPreference());
+	}
+}

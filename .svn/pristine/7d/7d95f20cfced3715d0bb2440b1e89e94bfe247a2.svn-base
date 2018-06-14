@@ -1,0 +1,125 @@
+package cn.edu.whu.lmars.SpatialDB.User;
+
+import java.util.Map;
+
+public class UserPreference {
+	private String userId;
+	private int metanum;
+	private Map<Integer,Double> spatialResolutionPref;//空间分辨率
+	private Map<Integer,Double> timeResolutionPref;//时间分辨率
+	private Map<Integer,Double> spectrumResolutionPref;//光谱分辨率
+	private Map<Integer,Double> radiationResolutionPref;//辐射分辨率
+	private Map<Integer,Double> widthPref;//幅宽
+	private Map<Integer,Double> snrPref;//信噪比
+	private Map<Integer,Double> anglePref;//交会角
+	private Map<Integer,Double> waveBandPref;//波段
+	private Map<Integer,Double> scalePref;//比例尺
+	private Map<Integer,Double> typePref;//传感器类型
+	private Map<Integer,Double> modePref;//成像模式
+	private Map<Integer,Double> poleDemandPref;//极化要求
+	private Map<Integer, Double> poleMethodPref;//极化方法
+	private Map<Integer, Double> spatialPref;//空间
+	private Map<Integer, Map<Integer,Double>> timePref;//时间
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserid(String userId) {
+		this.userId = userId;
+	}
+	public int getMetanum() {
+		return metanum;
+	}
+	public void setMetanum(int metanum) {
+		this.metanum = metanum;
+	}
+	public Map<Integer, Double> getSpatialResolutionPref() {
+		return spatialResolutionPref;
+	}
+	public void setSpatialResolutionPref(Map<Integer, Double> spatialResolutionPref) {
+		this.spatialResolutionPref = spatialResolutionPref;
+	}
+	public Map<Integer, Double> getTimeResolutionPref() {
+		return timeResolutionPref;
+	}
+	public void setTimeResolutionPref(Map<Integer, Double> timeResolutionPref) {
+		this.timeResolutionPref = timeResolutionPref;
+	}
+	public Map<Integer, Double> getSpectrumResolutionPref() {
+		return spectrumResolutionPref;
+	}
+	public void setSpectrumResolutionPref(Map<Integer, Double> spectrumResolutionPref) {
+		this.spectrumResolutionPref = spectrumResolutionPref;
+	}
+	public Map<Integer, Double> getRadiationResolutionPref() {
+		return radiationResolutionPref;
+	}
+	public void setRadiationResolutionPref(Map<Integer, Double> radiationResolutionPref) {
+		this.radiationResolutionPref = radiationResolutionPref;
+	}
+	public Map<Integer, Double> getWidthPref() {
+		return widthPref;
+	}
+	public void setWidthPref(Map<Integer, Double> widthPref) {
+		this.widthPref = widthPref;
+	}
+	public Map<Integer, Double> getSnrPref() {
+		return snrPref;
+	}
+	public void setSnrPref(Map<Integer, Double> snrPref) {
+		this.snrPref = snrPref;
+	}
+	public Map<Integer, Double> getAnglePref() {
+		return anglePref;
+	}
+	public void setAnglePref(Map<Integer, Double> anglePref) {
+		this.anglePref = anglePref;
+	}
+	public Map<Integer, Double> getWaveBandPref() {
+		return waveBandPref;
+	}
+	public void setWaveBandPref(Map<Integer, Double> waveBandPref) {
+		this.waveBandPref = waveBandPref;
+	}
+	public Map<Integer, Double> getScalePref() {
+		return scalePref;
+	}
+	public void setScalePref(Map<Integer, Double> scalePref) {
+		this.scalePref = scalePref;
+	}
+	public Map<Integer, Double> getTypePref() {
+		return typePref;
+	}
+	public void setTypePref(Map<Integer, Double> typePref) {
+		this.typePref = typePref;
+	}
+	public Map<Integer, Double> getModePref() {
+		return modePref;
+	}
+	public void setModePref(Map<Integer, Double> modePref) {
+		this.modePref = modePref;
+	}
+	public Map<Integer, Double> getPoleDemandPref() {
+		return poleDemandPref;
+	}
+	public void setPoleDemandPref(Map<Integer, Double> poleDemandPref) {
+		this.poleDemandPref = poleDemandPref;
+	}
+	public Map<Integer, Double> getPoleMethodPref() {
+		return poleMethodPref;
+	}
+	public void setPoleMethodPref(Map<Integer, Double> poleMethodPref) {
+		this.poleMethodPref = poleMethodPref;
+	}
+	public Map<Integer, Double> getSpatialPref() {
+		return spatialPref;
+	}
+	public void setSpatialPref(Map<Integer, Double> spatialPref) {
+		this.spatialPref = spatialPref;
+	}
+	public Map<Integer, Map<Integer, Double>> getTimePref() {
+		return timePref;
+	}
+	public void setTimePref(Map<Integer, Map<Integer, Double>> timePref) {
+		this.timePref = timePref;
+	}
+}

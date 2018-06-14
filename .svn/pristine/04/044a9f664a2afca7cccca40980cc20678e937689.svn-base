@@ -1,0 +1,50 @@
+package cn.edu.whu.lmars.SpatialDB.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.gson.Gson;
+
+import cn.edu.whu.lmars.SpatialDB.User.UserPreference;
+import cn.edu.whu.lmars.SpatialDB.User.UserTab;
+import cn.edu.whu.lmars.SpatialDB.db.DBConnectionPool;
+
+public class UserPrefDao {
+	//读取所有用户的喜好
+	private List<UserTab> getUserTab() throws Exception{
+		String sql = "select * from userpref";
+		Connection conn = DBConnectionPool.getConnection("localdb");
+		PreparedStatement pre = conn.prepareStatement(sql);
+		ResultSet res = pre.executeQuery();
+		List<UserTab> list = new ArrayList<>();
+		while(res.next()){
+			int id = res.getInt("id");
+			String userId = res.getString("userid");
+			String userPref = res.getString("userpref");
+			UserPreference user = parse(userPref);
+			UserTab usertab = new UserTab();
+			usertab.setId(id);
+			usertab.setUserId(userId);
+			usertab.setUserPref(user);
+			list.add(usertab);
+		}
+		res.close();
+		pre.close();
+		conn.close();
+		return list;
+	}
+	//存用户的喜好
+	public void insertUser(){
+		
+	}
+	
+	public UserPreference parse(String userPrefStr){
+		Gson gson = new Gson();
+		UserPreference userPref = gson.fromJson(userPrefStr, UserPreference.class);
+		return userPref;
+	}
+
+}

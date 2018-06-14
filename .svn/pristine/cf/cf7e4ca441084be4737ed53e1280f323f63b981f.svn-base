@@ -1,0 +1,98 @@
+package cn.edu.whu.lmars.SpatialDB.Geo;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import org.geotools.data.simple.SimpleFeatureCollection;
+import org.geotools.data.simple.SimpleFeatureSource;
+import org.geotools.factory.CommonFactoryFinder;
+import org.geotools.feature.FeatureIterator;
+import org.opengis.feature.simple.SimpleFeature;
+import org.opengis.feature.simple.SimpleFeatureType;
+import org.opengis.filter.Filter;
+import org.opengis.filter.FilterFactory2;
+
+import com.vividsolutions.jts.geom.Geometry;
+
+import cn.edu.whu.lmars.SpatialDB.GeoTools.SpatialConn;
+import cn.edu.whu.lmars.SpatialDB.SpatialObj.SpatialReltionType;
+
+public class GeoUtil {
+	public static ArrayList<SimpleFeature> topoQueryFeature(Geometry refGeo, String layerName,
+			SpatialReltionType.TopoRelTypeEnum relType) {
+		ArrayList<SimpleFeature> featurelist = new ArrayList<SimpleFeature>();
+		FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2(null);
+		SimpleFeatureSource featureSource = SpatialConn.getFeatureSource(layerName);
+		if (featureSource == null)
+			return null;
+		SimpleFeatureType schema = featureSource.getSchema();
+		String geometryAttributeName = schema.getGeometryDescriptor().getLocalName();
+		Filter filter1 = getGeoFilter(ff, geometryAttributeName, refGeo, relType);
+		SimpleFeatureCollection result = null;
+		try {
+			result = featureSource.getFeatures(filter1);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (result == null || result.isEmpty())
+			return null;
+		FeatureIterator<SimpleFeature> itertor = result.features();
+		while (itertor.hasNext()) {
+			SimpleFeature feature = itertor.next();
+			featurelist.add(feature);
+		}
+		itertor.close();
+		return featurelist;
+	}
+
+	/**
+	 * 获取表中的所有的元素
+	 * @param source
+	 * @return
+	 * @throws IOException
+	 */
+	public static ArrayList<SimpleFeature> getFeatures(SimpleFeatureSource source) throws IOException{
+		FeatureIterator<SimpleFeature> itertor = source.getFeatures().features();
+		ArrayList<SimpleFeature> featurelist = new ArrayList<SimpleFeature>();
+		while (itertor.hasNext()) {
+			SimpleFeature feature = itertor.next();
+			System.out.println(feature.getAttribute(0));
+			featurelist.add(feature);
+		}
+		itertor.close();
+		return featurelist;
+	}
+	
+	public static void main(String[] args) throws IOException {
+		SpatialConn.getAllLayerName();
+		System.out.println(SpatialConn.getFeatureType("CELL_C"));
+		getFeatures(SpatialConn.getFeatureSource("CELL_C"));
+	}
+	
+	public static Filter getGeoFilter(FilterFactory2 ff, String geometryAttributeName, Geometry refGeo,
+			SpatialReltionType.TopoRelTypeEnum relType) {
+		switch (relType) {
+		case intersect:
+			return ff.intersects(ff.property(geometryAttributeName), ff.literal(refGeo));
+		case contains:
+			return ff.contains(ff.property(geometryAttributeName), ff.literal(refGeo));
+		case within:
+			return ff.within(ff.property(geometryAttributeName), ff.literal(refGeo));
+		case cross:
+			return ff.crosses(ff.property(geometryAttributeName), ff.literal(refGeo));
+		case overlaps:
+			return ff.overlaps(ff.property(geometryAttributeName), ff.literal(refGeo));
+		case touches:
+			return ff.touches(ff.property(geometryAttributeName), ff.literal(refGeo));
+		case equals:
+			return ff.equals(ff.property(geometryAttributeName), ff.literal(refGeo));
+		case disjoint:
+			return ff.disjoint(ff.property(geometryAttributeName), ff.literal(refGeo));
+		default:
+			return null;
+		}
+	}
+
+}

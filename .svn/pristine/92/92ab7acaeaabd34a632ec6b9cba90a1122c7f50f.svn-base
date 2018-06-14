@@ -1,0 +1,11 @@
+package cn.edu.whu.lmars.SpatialDB.User;
+
+import java.util.Map;
+
+public class UserPreference {
+	private String userid;
+	private int metanum;
+	private Map<String, Integer> spaPref;
+	private Map<Integer,Map<Integer,Double>> timePref;
+
+}

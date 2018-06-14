@@ -1,0 +1,111 @@
+package cn.edu.whu.lmars.rsrec.entity;
+
+import java.util.List;
+
+public class TrainData {
+	private double spatialResolution;
+	private double timeResolution;
+	private double spectrumResolution;
+	private double radiationResolution;
+	private double width;
+	private double snr;
+	private double angle;
+	private List<Range> waveBand;
+	private String scale;
+	private String type;
+	private String mode;
+	private String poleDemand;
+	private List<String> poleMethod;
+	private String spatial;
+	private String time;
+	public double getSpatialResolution() {
+		return spatialResolution;
+	}
+	public void setSpatialResolution(double spatialResolution) {
+		this.spatialResolution = spatialResolution;
+	}
+	public double getTimeResolution() {
+		return timeResolution;
+	}
+	public void setTimeResolution(double timeResolution) {
+		this.timeResolution = timeResolution;
+	}
+	public double getSpectrumResolution() {
+		return spectrumResolution;
+	}
+	public void setSpectrumResolution(double spectrumResolution) {
+		this.spectrumResolution = spectrumResolution;
+	}
+	public double getRadiationResolution() {
+		return radiationResolution;
+	}
+	public void setRadiationResolution(double radiationResolution) {
+		this.radiationResolution = radiationResolution;
+	}
+	public double getWidth() {
+		return width;
+	}
+	public void setWidth(double width) {
+		this.width = width;
+	}
+	public double getSnr() {
+		return snr;
+	}
+	public void setSnr(double snr) {
+		this.snr = snr;
+	}
+	public double getAngle() {
+		return angle;
+	}
+	public void setAngle(double angle) {
+		this.angle = angle;
+	}
+	public List<Range> getWaveBand() {
+		return waveBand;
+	}
+	public void setWaveBand(List<Range> waveBand) {
+		this.waveBand = waveBand;
+	}
+	public String getScale() {
+		return scale;
+	}
+	public void setScale(String scale) {
+		this.scale = scale;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public String getMode() {
+		return mode;
+	}
+	public void setMode(String mode) {
+		this.mode = mode;
+	}
+	public String getPoleDemand() {
+		return poleDemand;
+	}
+	public void setPoleDemand(String poleDemand) {
+		this.poleDemand = poleDemand;
+	}
+	public List<String> getPoleMethod() {
+		return poleMethod;
+	}
+	public void setPoleMethod(List<String> poleMethod) {
+		this.poleMethod = poleMethod;
+	}
+	public String getSpatial() {
+		return spatial;
+	}
+	public void setSpatial(String spatial) {
+		this.spatial = spatial;
+	}
+	public String getTime() {
+		return time;
+	}
+	public void setTime(String time) {
+		this.time = time;
+	}
+}

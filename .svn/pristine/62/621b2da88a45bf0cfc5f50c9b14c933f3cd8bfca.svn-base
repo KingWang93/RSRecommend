@@ -1,0 +1,50 @@
+package cn.edu.whu.lmars.rsrec.entity;
+
+public class Range implements Comparable<Range>{   //范围�?
+    public double min;
+    public double len;
+    public double max;
+    
+    public double getMax() {
+        return max;
+    }
+
+    public void setMax(double max) {
+        this.max = max;
+    }
+
+    public double getMin() {
+        return min;
+    }
+
+    public void setMin(double min) {
+        this.min = min;
+    }
+
+    public Range(double min,double max){
+        this.min = min;
+        this.max = max;
+        this.len = max-min;
+    }
+
+    @Override
+    public String toString(){
+        return " Range:[" + min + "," + max + "] ";
+    }
+
+    @Override
+    public int compareTo(Range o){
+        if (this.min>o.min)
+            return 1;       //由低到高排序
+        else if (this.min<o.min)
+            return -1;
+        else {
+            if (this.len>o.len)
+                return 1;       //按len由低到高排序
+            else if (this.len<o.len)
+                return -1;
+            else
+                return  0;
+        }
+    }
+}

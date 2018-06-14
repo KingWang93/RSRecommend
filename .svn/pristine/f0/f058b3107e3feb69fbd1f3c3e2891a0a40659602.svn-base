@@ -1,0 +1,53 @@
+package cn.edu.whu.lmars.SpatialDB.Geo;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.opengis.feature.simple.SimpleFeature;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LinearRing;
+import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.impl.CoordinateArraySequence;
+
+import cn.edu.whu.lmars.SpatialDB.SpatialObj.SpatialReltionType;
+
+public class GeoCalc {
+	public Map<String, Integer> calcGridCover(List<String> list) {
+		Map<String, Integer> map = new HashMap<>();
+		for (int i = 0; i < list.size(); i++) {
+			String s = list.get(i);
+			String[] arr = s.split(", ");
+			Coordinate[] coordinates = new Coordinate[5];
+			for (int j = 0; j < 5; j++) {
+				Coordinate coor = new Coordinate();
+				System.out.println(j);
+				coor.x = Double.parseDouble(arr[j].split(" ")[0]);
+				coor.y = Double.parseDouble(arr[j].split(" ")[1]);
+				coordinates[j] = coor;
+			}
+			CoordinateArraySequence sequence = new CoordinateArraySequence(coordinates);
+			GeometryFactory fac = new GeometryFactory();
+			LinearRing ring = new LinearRing(sequence, fac);
+			Geometry poly = new Polygon(ring, null, fac);
+			ArrayList<SimpleFeature> fs = GeoUtil.topoQueryFeature(poly, "CELL_C",
+					SpatialReltionType.TopoRelTypeEnum.intersect);
+			for (SimpleFeature sf : fs) {
+				String cell = (String) sf.getAttribute("cellName");
+				map.put(cell, map.containsKey(cell) ? map.get(cell) + 1 : 1);
+			}
+		}
+		return map;
+	}
+
+	public static void main(String[] args) {
+		ArrayList<String> list = new ArrayList<>();
+		list.add("177.1 56.6, 178.1 56.6, 178.1 57.6, 177.1 57.6, 177.1 56.6");
+		list.add("177.1 56.6, 178.1 56.6, 178.1 57.6, 177.1 57.6, 177.1 56.6");
+		System.out.println(new GeoCalc().calcGridCover(list));
+	}
+}
